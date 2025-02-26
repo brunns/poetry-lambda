@@ -13,7 +13,8 @@ dependencies = [
     "yarl (>=1.18.3,<2.0.0)",
     "pydantic (>=2.10.6,<3.0.0)",
     "wireup (>=0.16.0,<0.17.0)",
-    "pynamodb (>=6.0.2,<7.0.0)"
+    "pynamodb (>=6.0.2,<7.0.0)",
+    "flask-lambda (>=0.0.4,<0.0.5)"
 ]
 
 [project.scripts]
@@ -40,6 +41,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry-plugin-lambda-build]
 package-artifact-path = "build/package.zip"
+without = "dev"
 
 [tool.ruff]
 line-length = 120
