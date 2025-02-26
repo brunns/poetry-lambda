@@ -11,8 +11,6 @@ dependencies = [
     "flask[async] (>=3.1.0,<4.0.0)",
     "httpx (>=0.28.1,<0.29.0)",
     "yarl (>=1.18.3,<2.0.0)",
-    "poetry-plugin-lambda-build (>=1.0.7,<2.0.0)",
-    "poetry-plugin-export (>=1.9.0,<2.0.0)",
     "pydantic (>=2.10.6,<3.0.0)",
     "wireup (>=0.16.0,<0.17.0)",
     "pynamodb (>=6.0.2,<7.0.0)"
@@ -39,6 +37,9 @@ pyright = "^1.1.394"
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry-plugin-lambda-build]
+package-artifact-path = "build/package.zip"
 
 [tool.ruff]
 line-length = 120

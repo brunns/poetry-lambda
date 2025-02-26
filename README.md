@@ -14,11 +14,31 @@ Launch web app locally
 poetry run web-app
 ```
 
+### install
+
+Install depenencies
+
+Run: once
+
+```sh
+poetry install
+```
+
+### build
+
+Build lambda package
+
+Requires: install
+
+```
+poetry build-lambda
+```
+
 ### pc
 
 Precommit tasks
 
-Requires: test, lint
+Requires: install, test, lint
 
 ```python
 #!/usr/bin/env python
@@ -74,6 +94,7 @@ poetry new poetry-lambda
 cd poetry-lambda
 git init
 curl https://www.toptal.com/developers/gitignore/api/python,intellij,emacs > .gitignore
-poetry add "flask[async]" httpx yarl poetry-plugin-lambda-build poetry-plugin-export pydantic wireup pynamodb
+poetry add "flask[async]" httpx yarl pydantic wireup pynamodb
 poetry add pytest ruff pyhamcrest brunns-matchers factory-boy pytest-asyncio pytest-cov pytest-docker localstack pyright --group dev
+poetry self add poetry-plugin-lambda-build poetry-plugin-export
 ``
