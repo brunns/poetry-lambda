@@ -2,12 +2,12 @@ import pytest
 from flask import Flask
 from flask.testing import FlaskClient
 
-from poetry_lambda.app import app as the_app
+from poetry_lambda.app import create_app
 
 
 @pytest.fixture
 def app() -> Flask:
-    return the_app
+    return create_app()
 
 
 @pytest.fixture

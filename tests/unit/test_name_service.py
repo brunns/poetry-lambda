@@ -1,7 +1,7 @@
 from poetry_lambda.services import NameService
 
 
-def test_something():
+def test_name_service():
     # Given
     ns = NameService()
 

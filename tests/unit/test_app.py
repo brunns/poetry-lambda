@@ -1,8 +1,12 @@
+import logging
+
 from brunns.matchers.werkzeug import is_werkzeug_response
 from hamcrest import assert_that, contains_string
 from wireup.integration.flask import get_container
 
 from poetry_lambda.services import NameService
+
+logger = logging.getLogger(__name__)
 
 
 def test_app(app, client):

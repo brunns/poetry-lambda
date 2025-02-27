@@ -14,7 +14,7 @@ dependencies = [
     "pydantic (>=2.10.6,<3.0.0)",
     "wireup (>=0.16.0,<0.17.0)",
     "pynamodb (>=6.0.2,<7.0.0)",
-    "flask-lambda (>=0.0.4,<0.0.5)"
+    "mangum (>=0.19.0,<0.20.0)"
 ]
 
 [project.scripts]
@@ -34,13 +34,16 @@ pytest-cov = "^6.0.0"
 pytest-docker = "^3.2.0"
 localstack = "^4.1.1"
 pyright = "^1.1.394"
+boto3 = "^1.37.2"
+botocore = "^1.37.2"
+stamina = "^24.3.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry-plugin-lambda-build]
-package-artifact-path = "build/package.zip"
+package-artifact-path = "dist/poetry-lambda.zip"
 without = "dev"
 
 [tool.ruff]
@@ -52,8 +55,14 @@ select = ["ALL"]
 ignore = ["COM812", "D"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["ANN", "INP", "S101"]
+"tests/*" = ["ANN", "INP", "S101", "S106"]
 
 [tool.pyright]
 include = ["src/"]
 pythonVersion = "3.13"
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+log_format = "%(asctime)s %(levelname)s %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
