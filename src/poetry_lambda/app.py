@@ -1,10 +1,12 @@
 import logging
+from typing import Any
 
 import wireup.integration.flask
+from asgiref.wsgi import WsgiToAsgi
+from flask import Flask, jsonify
 from flask.typing import ResponseReturnValue
 from mangum import Mangum
 from mangum.types import LambdaContext, LambdaEvent
-from quart import Quart, jsonify
 
 from poetry_lambda import services
 from poetry_lambda.services import NameService
@@ -12,8 +14,8 @@ from poetry_lambda.services import NameService
 DEBUG = True
 
 
-def create_app() -> Quart:
-    app = Quart(__name__)
+def create_app() -> Flask:
+    app = Flask(__name__)
     app.logger.info("app created")
     if DEBUG:
         app.logger.setLevel(logging.DEBUG)
@@ -24,14 +26,14 @@ def create_app() -> Quart:
         return jsonify(status=200, message=f"Hello {name_service.get_name()}!")
 
     container = wireup.create_container(service_modules=[services])
-    wireup.integration.flask.setup(container, app, import_flask_config=True)  # type: ignore
+    wireup.integration.flask.setup(container, app, import_flask_config=True)
     app.logger.info("app ready")
     return app
 
 
-def lambda_handler(event: LambdaEvent, context: LambdaContext) -> Mangum:
-    handler = Mangum(create_app())  # type: ignore
-    return handler(event, context)  # type: ignore
+def lambda_handler(event: LambdaEvent, context: LambdaContext) -> dict[str, Any]:
+    handler = Mangum(WsgiToAsgi(create_app()))
+    return handler(event, context)
 
 
 def main() -> None:
