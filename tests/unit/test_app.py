@@ -9,11 +9,11 @@ from poetry_lambda.services import NameService
 logger = logging.getLogger(__name__)
 
 
-def test_app(app, client):
+async def test_app(app, client):
     class FakeNameService(NameService):
         def get_name(self) -> str:
             return "Test Value"
 
     with get_container(app).override.service(NameService, new=FakeNameService()):
-        response = client.get("/")
+        response = await client.get("/")
         assert_that(response, is_werkzeug_response().with_status_code(200).and_text(contains_string("Test Value")))

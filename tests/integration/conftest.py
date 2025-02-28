@@ -91,6 +91,12 @@ def flask_function(lambda_client: BaseClient) -> str:
     return function_name
 
 
+@pytest.fixture(scope="session")
+def flask_function_url(lambda_client: BaseClient, flask_function: str) -> URL:
+    response = lambda_client.create_function_url_config(FunctionName=flask_function, AuthType="NONE")
+    return URL(response["FunctionUrl"])
+
+
 class FunctionNotActiveError(Exception):
     """Function not yet active"""
 

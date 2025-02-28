@@ -52,14 +52,11 @@ def test_install_and_call_lambda_flask(lambda_client: BaseClient, flask_function
     assert_that(response_payload, has_entries(statusCode=HTTPStatus.OK, body=contains_string("Hello")))
 
 
-def test_install_and_call_flask_lambda_over_http(lambda_client: BaseClient, flask_function: str):
+def test_install_and_call_flask_lambda_over_http(flask_function_url: URL):
     # Given
-    response = lambda_client.create_function_url_config(FunctionName=flask_function, AuthType="NONE")
-    function_url = URL(response["FunctionUrl"])
-    logger.info("FunctionUrl: %s", function_url)
 
     # When
-    response = httpx.get(str(function_url))
+    response = httpx.get(str(flask_function_url))
 
     # Then
     assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_body(contains_string("Hello")))
