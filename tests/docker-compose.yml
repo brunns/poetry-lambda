@@ -11,6 +11,7 @@ services:
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-../volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    network_mode: bridge
     healthcheck:
       test: awslocal lambda list-functions && awslocal dynamodb list-tables
       interval: 5s

@@ -39,7 +39,19 @@ def lambda_client(localstack: URL) -> BaseClient:
         "lambda",
         aws_access_key_id="test",
         aws_secret_access_key="test",
-        region_name="us-east-1",
+        region_name="eu-west-1",
+        endpoint_url=str(localstack),
+        config=botocore.config.Config(retries={"max_attempts": 0}),
+    )
+
+
+@pytest.fixture(scope="session")
+def dynamodb_client(localstack: URL) -> BaseClient:
+    return boto3.client(
+        "dynamodb",
+        aws_access_key_id="test",
+        aws_secret_access_key="test",
+        region_name="eu-west-1",
         endpoint_url=str(localstack),
         config=botocore.config.Config(retries={"max_attempts": 0}),
     )
@@ -78,7 +90,6 @@ def flask_function(lambda_client: BaseClient) -> str:
             Role="arn:aws:iam::123456789012:role/test-role",
             Handler="poetry_lambda.app.lambda_handler",
             Code={"ZipFile": zipfile.read()},
-            # Architectures=["arm64"],
             Architectures=["x86_64"],
             Timeout=180,
             Environment={

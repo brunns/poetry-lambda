@@ -48,8 +48,6 @@ build-backend = "poetry.core.masonry.api"
 docker-image = "public.ecr.aws/sam/build-python3.13:latest-x86_64"
 docker-network = "host"
 docker-platform = "linux/x86_64"
-#layer-artifact-path = "dist/layer.zip"
-#layer-install-dir = "dist/python"
 package-artifact-path = "dist/poetry-lambda.zip"
 without = "dev"
 

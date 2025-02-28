@@ -10,7 +10,7 @@ from mangum import Mangum
 from mangum.types import LambdaContext, LambdaEvent
 from pydantic import BaseModel
 
-from poetry_lambda import services
+from poetry_lambda import repos, services
 from poetry_lambda.services import NameService
 
 DEBUG = True
@@ -27,13 +27,13 @@ def create_app() -> Flask:
     if DEBUG:
         app.logger.setLevel(logging.DEBUG)
 
-    @app.route("/")
-    def hello_world(name_service: NameService) -> ResponseReturnValue:
-        app.logger.debug("name_service: %s", name_service)
-        Hello(status=HTTPStatus.OK, message=f"Hello {name_service.get_name()}!")
-        return Hello.model_dump_json()
+    @app.get("/")
+    @app.get("/<name>")
+    def hello_world(name_service: NameService, name: str | None = None) -> ResponseReturnValue:
+        hello = Hello(status=HTTPStatus.OK, message=f"Hello {name_service.get_nickname(name)}!")
+        return hello.model_dump_json()
 
-    container = wireup.create_container(service_modules=[services])
+    container = wireup.create_container(service_modules=[services, repos])
     wireup.integration.flask.setup(container, app, import_flask_config=True)
     app.logger.info("app ready")
     return app
