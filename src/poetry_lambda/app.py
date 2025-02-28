@@ -1,3 +1,5 @@
+import logging
+
 import wireup.integration.flask
 from flask import Flask, jsonify
 from flask.typing import ResponseReturnValue
@@ -5,10 +7,13 @@ from flask.typing import ResponseReturnValue
 from poetry_lambda import services
 from poetry_lambda.services import NameService
 
+DEBUG = True
+
 
 def create_app() -> Flask:
     app = Flask(__name__)
     app.logger.info("app created")
+    if DEBUG: app.logger.setLevel(logging.DEBUG)
 
     @app.route("/")
     def hello_world(name_service: NameService) -> ResponseReturnValue:
@@ -30,7 +35,7 @@ def lambda_handler(event, context):
 
 def main() -> None:
     app = create_app()
-    app.run(debug=True)
+    app.run(debug=DEBUG)
 
 
 if __name__ == "__main__":

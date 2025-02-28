@@ -59,7 +59,7 @@ def test_install_and_call_flask_lambda_over_http(lambda_client: BaseClient, flas
     logger.info("FunctionUrl: %s", function_url)
 
     # When
-    httpx.get(str(function_url))
+    response = httpx.get(str(function_url))
 
     # Then
     assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_body(contains_string("Hello")))
