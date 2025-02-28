@@ -18,7 +18,7 @@ poetry run web-app
 
 ### install
 
-Install depenencies
+Install dependencies
 
 Run: once
 
@@ -30,10 +30,10 @@ poetry install
 
 Build lambda package
 
-Requires: install
+Requires: colima, install
 
 ```
-poetry build-lambda
+poetry build-lambda -vv
 ```
 
 ### pc
@@ -57,6 +57,8 @@ Requires: unit, integration
 
 Unit tests
 
+Requires: install
+
 ```sh
 poetry run pytest tests/unit/ --durations=10 --cov-report term-missing --cov src
 ```
@@ -65,16 +67,15 @@ poetry run pytest tests/unit/ --durations=10 --cov-report term-missing --cov src
 
 Integration tests
 
-Requires: build
+Requires: colima, install, build
 
 ```sh
-colima status || colima start
 poetry run pytest tests/integration/ --durations=10 --cov-report term-missing --cov src
 ```
 
 ### format
 
-Format code
+Format & fix code
 
 ```sh 
 poetry run ruff format .
@@ -89,6 +90,16 @@ Lint code
 poetry run ruff format . --check
 poetry run ruff check .
 poetry run pyright
+```
+
+### colima
+
+Ensure colima is running
+
+Run: once
+
+```shell
+colima status || colima start
 ```
 
 ## Initial setup

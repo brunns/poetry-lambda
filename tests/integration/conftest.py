@@ -78,6 +78,8 @@ def flask_function(lambda_client: BaseClient) -> str:
             Role="arn:aws:iam::123456789012:role/test-role",
             Handler="poetry_lambda.app.lambda_handler",
             Code={"ZipFile": zipfile.read()},
+            # Architectures=["arm64"],
+            Architectures=["x86_64"],
             Timeout=180,
             Environment={
                 "Variables": {

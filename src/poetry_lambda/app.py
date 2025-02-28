@@ -1,17 +1,24 @@
 import logging
+from http import HTTPStatus
 from typing import Any
 
 import wireup.integration.flask
 from asgiref.wsgi import WsgiToAsgi
-from flask import Flask, jsonify
+from flask import Flask
 from flask.typing import ResponseReturnValue
 from mangum import Mangum
 from mangum.types import LambdaContext, LambdaEvent
+from pydantic import BaseModel
 
 from poetry_lambda import services
 from poetry_lambda.services import NameService
 
 DEBUG = True
+
+
+class Hello(BaseModel):
+    status: int
+    message: str
 
 
 def create_app() -> Flask:
@@ -23,7 +30,8 @@ def create_app() -> Flask:
     @app.route("/")
     def hello_world(name_service: NameService) -> ResponseReturnValue:
         app.logger.debug("name_service: %s", name_service)
-        return jsonify(status=200, message=f"Hello {name_service.get_name()}!")
+        Hello(status=HTTPStatus.OK, message=f"Hello {name_service.get_name()}!")
+        return Hello.model_dump_json()
 
     container = wireup.create_container(service_modules=[services])
     wireup.integration.flask.setup(container, app, import_flask_config=True)
