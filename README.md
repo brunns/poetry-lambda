@@ -98,7 +98,7 @@ poetry new poetry-lambda
 cd poetry-lambda
 git init
 curl https://www.toptal.com/developers/gitignore/api/python,intellij,emacs > .gitignore
-poetry add "flask[async]" flask-lambda httpx yarl pydantic wireup pynamodb
+poetry add "flask[async]" mangum httpx yarl pydantic wireup pynamodb asgiref boto3 botocore eval-type-backport
 poetry add pytest ruff pyhamcrest brunns-matchers factory-boy pytest-asyncio pytest-cov pytest-docker localstack pyright --group dev
 poetry self add poetry-plugin-lambda-build poetry-plugin-export
 ``
