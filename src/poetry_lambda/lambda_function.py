@@ -11,4 +11,4 @@ def lambda_handler(event: dict[str:Any], context: dict[str:Any]) -> dict[str:Any
     logger.info("boto3 version: %s", boto3.__version__)
     logger.info("botocore version: %s", botocore.__version__)
 
-    return {"statusCode": 200, "message": "Receipt processed successfully"}
+    return {"statusCode": 200, "message": "Hello World!"}

@@ -5,7 +5,8 @@ import botocore
 import httpx
 import pytest
 from botocore.client import BaseClient
-from httpx import URL, RequestError
+from httpx import RequestError
+from yarl import URL
 
 logger = logging.getLogger(__name__)
 

@@ -1,8 +1,8 @@
 # poetry-lambda
 
-Snadbox to try building an AWS Lambda with Flask, DI using wireup, and pynamodb to access Dynamo. 
+Sandbox to try building an AWS Lambda with Flask, DI using wireup, and pynamodb to access Dynamo. 
 
-Local tests should use localstack, started & stopped using pytest-docker.
+Local tests will use localstack, started & stopped using pytest-docker.
 
 ## Tasks
 
