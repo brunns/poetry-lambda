@@ -11,7 +11,7 @@ from mangum.types import LambdaContext, LambdaEvent
 from pydantic import BaseModel
 
 from poetry_lambda import repos, services
-from poetry_lambda.services import NameService
+from poetry_lambda.services import PersonService
 
 DEBUG = True
 
@@ -29,8 +29,8 @@ def create_app() -> Flask:
 
     @app.get("/")
     @app.get("/<name>")
-    def hello_world(name_service: NameService, name: str | None = None) -> ResponseReturnValue:
-        hello = Hello(status=HTTPStatus.OK, message=f"Hello {name_service.get_nickname(name)}!")
+    def hello_world(person_service: PersonService, name: str | None = None) -> ResponseReturnValue:
+        hello = Hello(status=HTTPStatus.OK, message=f"Hello {person_service.get_nickname(name)}!")
         return hello.model_dump_json()
 
     container = wireup.create_container(service_modules=[services, repos])

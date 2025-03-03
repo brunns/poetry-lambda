@@ -1,4 +1,5 @@
 import logging
+from collections.abc import Generator
 from pathlib import Path
 
 import boto3
@@ -8,7 +9,10 @@ import pytest
 import stamina
 from botocore.client import BaseClient
 from httpx import RequestError
+from pynamodb.models import Model
 from yarl import URL
+
+from poetry_lambda.model.person import Person
 
 logger = logging.getLogger(__name__)
 
@@ -111,7 +115,7 @@ def flask_function_url(lambda_client: BaseClient, flask_function: str) -> URL:
 
 
 class FunctionNotActiveError(Exception):
-    """Function not yet active"""
+    """Lambda Function not yet active"""
 
 
 def wait_for_function_active(function_name, lambda_client):
@@ -123,3 +127,11 @@ def wait_for_function_active(function_name, lambda_client):
             logger.info("function_state %s", function_state)
             if function_state != "Active":
                 raise FunctionNotActiveError
+
+
+@pytest.fixture(scope="session")
+def people_table(localstack) -> Generator[Model]:  # noqa: ARG001
+    if not Person.exists():
+        Person.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
+    yield Person
+    Person.delete_table()

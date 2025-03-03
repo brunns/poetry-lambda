@@ -6,12 +6,12 @@ from flask.testing import FlaskClient
 from hamcrest import assert_that, contains_string
 from wireup.integration.flask import get_container
 
-from poetry_lambda.services import NameService
+from poetry_lambda.services import PersonService
 
 logger = logging.getLogger(__name__)
 
 
-class FakeNameService(NameService):
+class FakePersonService(PersonService):
     def __init__(self):
         pass
 
@@ -20,12 +20,12 @@ class FakeNameService(NameService):
 
 
 def test_name_given(app: Flask, client: FlaskClient):
-    with get_container(app).override.service(NameService, new=FakeNameService()):
+    with get_container(app).override.service(PersonService, new=FakePersonService()):
         response = client.get("/simon")
         assert_that(response, is_werkzeug_response().with_status_code(200).and_text(contains_string("SIMON")))
 
 
 def test_default_name(app: Flask, client: FlaskClient):
-    with get_container(app).override.service(NameService, new=FakeNameService()):
+    with get_container(app).override.service(PersonService, new=FakePersonService()):
         response = client.get("/")
         assert_that(response, is_werkzeug_response().with_status_code(200).and_text(contains_string("Default")))

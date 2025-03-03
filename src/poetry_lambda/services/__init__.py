@@ -1,3 +1,3 @@
-from .name_services import NameService
+from .person_services import PersonService
 
-__all__ = ["NameService"]
+__all__ = ["PersonService"]
