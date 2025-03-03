@@ -4,7 +4,16 @@ Sandbox to try building an AWS Lambda with Flask, DI using wireup, and pynamodb 
 
 Local tests will use localstack, started & stopped using pytest-docker.
 
-Requires [poetry](https://python-poetry.org) and [colima](https://github.com/abiosoft/colima). Optionally makes use of [xc](https://xcfile.dev/) as a task runner.
+Requires [poetry](https://python-poetry.org) and [colima](https://github.com/abiosoft/colima). Optionally makes use of [direnv](https://direnv.net/) to set your environment and [xc](https://xcfile.dev/) as a task runner.
+
+## Setup
+
+```sh 
+poetry self add poetry-plugin-lambda-build poetry-plugin-export
+cp .envrc.template .envrc
+direnv allow
+xc pc
+```
 
 ## Tasks
 
