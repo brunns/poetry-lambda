@@ -29,17 +29,18 @@ class PersonRepo:
     def get_nickname(self, name: str) -> str:
         try:
             response = self.people_table.get_item(Key={"name": name})
-            if "Item" in response:
-                try:
-                    person = Person.model_validate(response.get("Item"))
-                except ValidationError:
-                    logger.error("Invalid record for Person with name=%r, %s", name, response)  # noqa: TRY400
-                    raise
-                else:
-                    return person.nickname
-            else:
-                logger.warning("Person not found with name=%r", name)
-                raise NotFoundError
         except ClientError:
             logger.error("ClientError for Person with name=%r", name)  # noqa: TRY400
             raise
+
+        if "Item" not in response:
+            logger.warning("Person not found with name=%r", name)
+            raise NotFoundError
+
+        try:
+            person = Person.model_validate(response.get("Item"))
+        except ValidationError:
+            logger.error("Invalid record for Person with name=%r, %s", name, response)  # noqa: TRY400
+            raise
+
+        return person.nickname
