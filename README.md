@@ -21,9 +21,22 @@ xc pc
 
 Launch web app locally
 
+Requires: install
+
 ```sh
 docker compose --file tests/docker-compose.yml up -d
+sleep 1
+
+aws dynamodb create-table --table-name People --key-schema '[{"AttributeName": "name", "KeyType": "HASH"}]' --attribute-definitions '[{"AttributeName": "name", "AttributeType": "S"}]' --provisioned-throughput '{"ReadCapacityUnits": 1, "WriteCapacityUnits": 1}' --region eu-west-1 --endpoint-url=http://localhost:4566
+aws dynamodb list-tables --region eu-west-1 --endpoint-url=http://localhost:4566
+
+aws dynamodb put-item --table-name People --item '{"name": {"S": "simon"}, "nickname": {"S": "Baldy"}}' --region eu-west-1 --endpoint-url=http://localhost:4566 
+aws dynamodb describe-table --table-name People --region eu-west-1 --endpoint-url=http://localhost:4566
+aws dynamodb get-item --table-name People --key '{"name": {"S": "simon"}}' --region eu-west-1 --endpoint-url=http://localhost:4566
+
 poetry run web-app
+
+aws dynamodb delete-table --table-name People --region eu-west-1 --endpoint-url=http://localhost:4566
 docker compose --file tests/docker-compose.yml down
 ```
 
