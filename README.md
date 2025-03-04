@@ -1,8 +1,8 @@
 # poetry-lambda
 
-Sandbox to try building an AWS Lambda with Flask, DI using wireup, and pynamodb to access Dynamo. 
+Sandbox to try building an [AWS Lambda](https://aws.amazon.com/lambda/) with [Flask](https://pypi.org/project/flask/), [DI](https://pinboard.in/u:brunns/t:dependency-injection) using [wireup](https://pypi.org/project/wireup/), and ~~pynamodb~~ [boto3](https://pypi.org/project/boto3/) to access [Dynamo](https://aws.amazon.com/dynamodb/). 
 
-Local tests will use localstack, started & stopped using pytest-docker.
+Local tests will use [localstack](https://www.localstack.cloud/), started & stopped using [pytest-docker](https://pypi.org/project/pytest-docker/).
 
 Requires [poetry](https://python-poetry.org) and [colima](https://github.com/abiosoft/colima). Optionally makes use of [direnv](https://direnv.net/) to set your environment and [xc](https://xcfile.dev/) as a task runner.
 
@@ -22,7 +22,9 @@ xc pc
 Launch web app locally
 
 ```sh
+docker compose --file tests/docker-compose.yml up -d
 poetry run web-app
+docker compose --file tests/docker-compose.yml down
 ```
 
 ### install
@@ -37,7 +39,7 @@ poetry install
 
 ### build
 
-Build lambda package
+Build lambda package in dist/
 
 Requires: colima, install
 
@@ -49,7 +51,7 @@ poetry build-lambda -vv
 
 Precommit tasks
 
-Requires: install, test, lint
+Requires: test, lint
 
 ```python
 #!/usr/bin/env python
