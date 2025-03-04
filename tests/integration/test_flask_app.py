@@ -19,6 +19,7 @@ def persisted_person(people_table: Any) -> Generator[Person]:
 
 
 def test_no_name_given(client: FlaskClient):
+    """Given dynamodb running in localstack, hit the endpoint via http"""
     # Given
 
     # When

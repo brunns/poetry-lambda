@@ -27,6 +27,7 @@ def persisted_person(people_table: Any) -> Generator[Person]:
 
 
 def test_install_and_call_lambda_flask(lambda_client: BaseClient, flask_function: str):
+    """Given lambda installed into localstack, run it via boto3 lambda client"""
     # Given
 
     # When
@@ -54,6 +55,7 @@ def test_install_and_call_lambda_flask(lambda_client: BaseClient, flask_function
 
 
 def test_install_and_call_flask_lambda_over_http(flask_function_url: URL):
+    """Given lambda installed into localstack, run it via http"""
     # Given
 
     # When
@@ -65,6 +67,7 @@ def test_install_and_call_flask_lambda_over_http(flask_function_url: URL):
 
 @pytest.mark.xfail
 def test_install_and_call_flask_lambda_with_nickname_over_http(flask_function_url: URL):
+    """Given lambda installed into localstack, run it via http, with a path"""
     # Given
 
     # When
