@@ -14,6 +14,8 @@ from yarl import URL
 
 logger = logging.getLogger(__name__)
 
+AWS_REGION = "eu-west-1"
+
 
 @pytest.fixture(scope="session")
 def localstack(docker_ip, docker_services) -> URL:
@@ -37,17 +39,17 @@ def is_responsive(url: URL) -> bool:
 
 @pytest.fixture(scope="session")
 def lambda_client(localstack: URL) -> BaseClient:
-    return boto3.client("lambda", endpoint_url=str(localstack))
+    return boto3.client("lambda", endpoint_url=str(localstack), region_name=AWS_REGION)
 
 
 @pytest.fixture(scope="session")
 def dynamodb_client(localstack: URL) -> BaseClient:
-    return boto3.client("dynamodb", endpoint_url=str(localstack))
+    return boto3.client("dynamodb", endpoint_url=str(localstack), region_name=AWS_REGION)
 
 
 @pytest.fixture(scope="session")
 def dynamodb_resource(localstack: URL) -> ServiceResource:
-    return boto3.resource("dynamodb", endpoint_url=str(localstack))
+    return boto3.resource("dynamodb", endpoint_url=str(localstack), region_name=AWS_REGION)
 
 
 @pytest.fixture(scope="session")
@@ -64,7 +66,8 @@ def flask_function(lambda_client: BaseClient) -> str:
             Timeout=180,
             Environment={
                 "Variables": {
-                    "DYNAMODB_ENDPOINT": "http://host.docker.internal:4569",
+                    "DYNAMODB_ENDPOINT": "http://host.docker.internal:4566",
+                    "AWS_REGION": AWS_REGION,
                 }
             },
         )

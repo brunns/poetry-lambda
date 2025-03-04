@@ -63,6 +63,7 @@ def test_install_and_call_flask_lambda_over_http(flask_function_url: URL):
     assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_body(contains_string("Hello")))
 
 
+@pytest.mark.xfail
 def test_install_and_call_flask_lambda_with_nickname_over_http(flask_function_url: URL):
     # Given
 

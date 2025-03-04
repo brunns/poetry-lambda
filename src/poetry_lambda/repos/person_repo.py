@@ -17,7 +17,10 @@ class NotFoundError(Exception):
 
 @service
 def people_table(dynamodb_resource: ServiceResource) -> Any:
-    return dynamodb_resource.Table("People")  # type: ignore[reportAttributeAccessIssue]
+    logger.info("attaching to table People using %s", dynamodb_resource)
+    table = dynamodb_resource.Table("People")  # type: ignore[reportAttributeAccessIssue]
+    logger.info("got %s", table)
+    return table
 
 
 @service

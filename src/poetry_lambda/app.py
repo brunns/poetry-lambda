@@ -28,6 +28,7 @@ def create_app() -> Flask:
     app.logger.info("app created")
     if DEBUG:
         app.logger.setLevel(logging.DEBUG)
+        logging.basicConfig(level=DEBUG)
 
     @app.get("/")
     @app.get("/<name>")
@@ -35,10 +36,12 @@ def create_app() -> Flask:
         hello = Hello(status=HTTPStatus.OK, message=f"Hello {person_service.get_nickname(name)}!")
         return hello.model_dump_json()
 
-    container = wireup.create_container(
-        service_modules=[services, repos],
-        parameters={"dynamodb_endpoint": URL(os.getenv("DYNAMODB_ENDPOINT", "http://localhost:4566"))},
-    )
+    config = {
+        "dynamodb_endpoint": URL(os.getenv("DYNAMODB_ENDPOINT", "http://localhost:4566")),
+        "aws_region": os.getenv("AWS_REGION", "eu-west-1"),
+    }
+    app.logger.info("config: %s", config)
+    container = wireup.create_container(service_modules=[services, repos], parameters=config)
     wireup.integration.flask.setup(container, app, import_flask_config=True)
     app.logger.info("app ready")
     return app
