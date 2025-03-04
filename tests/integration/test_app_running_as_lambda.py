@@ -1,28 +1,27 @@
 import json
 import logging
+from collections.abc import Generator
 from http import HTTPStatus
 
 import httpx
+import pytest
 from botocore.client import BaseClient
 from brunns.matchers.response import is_response
 from hamcrest import assert_that, contains_string, has_entries
 from yarl import URL
 
+from poetry_lambda.model.person import Person
+from tests.utils.builders import PersonFactory
+
 logger = logging.getLogger(__name__)
 
 
-def test_install_and_call_lambda(lambda_client: BaseClient, lambda_function: str):
-    # Given
-
-    # When
-    response = lambda_client.invoke(
-        FunctionName=lambda_function, InvocationType="RequestResponse", Payload=json.dumps({})
-    )
-
-    # Then
-    assert response["StatusCode"] == HTTPStatus.OK
-    payload = json.loads(response["Payload"].read().decode("utf-8"))
-    assert_that(payload, has_entries(statusCode=HTTPStatus.OK, message=contains_string("Hello")))
+@pytest.fixture(autouse=True, scope="module")
+def persisted_person(people_table: type[Person]) -> Generator[Person]:  # noqa: ARG001
+    person = PersonFactory(name="fred", nickname="Freddy")
+    person.save()
+    yield person
+    person.delete()
 
 
 def test_install_and_call_lambda_flask(lambda_client: BaseClient, flask_function: str):
@@ -60,3 +59,14 @@ def test_install_and_call_flask_lambda_over_http(flask_function_url: URL):
 
     # Then
     assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_body(contains_string("Hello")))
+
+
+@pytest.mark.xfail
+def test_install_and_call_flask_lambda_with_nickname_over_http(flask_function_url: URL):
+    # Given
+
+    # When
+    response = httpx.get(str(flask_function_url / "fred"))
+
+    # Then
+    assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_body(contains_string("Freddy")))

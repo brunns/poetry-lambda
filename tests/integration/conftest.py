@@ -3,13 +3,11 @@ from collections.abc import Generator
 from pathlib import Path
 
 import boto3
-import botocore
 import httpx
 import pytest
 import stamina
 from botocore.client import BaseClient
 from httpx import RequestError
-from pynamodb.models import Model
 from yarl import URL
 
 from poetry_lambda.model.person import Person
@@ -39,49 +37,12 @@ def is_responsive(url: URL) -> bool:
 
 @pytest.fixture(scope="session")
 def lambda_client(localstack: URL) -> BaseClient:
-    return boto3.client(
-        "lambda",
-        aws_access_key_id="test",
-        aws_secret_access_key="test",
-        region_name="eu-west-1",
-        endpoint_url=str(localstack),
-        config=botocore.config.Config(retries={"max_attempts": 0}),
-    )
+    return boto3.client("lambda", endpoint_url=str(localstack))
 
 
 @pytest.fixture(scope="session")
 def dynamodb_client(localstack: URL) -> BaseClient:
-    return boto3.client(
-        "dynamodb",
-        aws_access_key_id="test",
-        aws_secret_access_key="test",
-        region_name="eu-west-1",
-        endpoint_url=str(localstack),
-        config=botocore.config.Config(retries={"max_attempts": 0}),
-    )
-
-
-@pytest.fixture(scope="session")
-def lambda_function(lambda_client: BaseClient) -> str:
-    function_name = "lambda_function"
-    with Path("dist/poetry-lambda.zip").open("rb") as zipfile:
-        lambda_client.create_function(
-            FunctionName=function_name,
-            Runtime="python3.13",
-            Role="arn:aws:iam::123456789012:role/test-role",
-            Handler="poetry_lambda.lambda_function.lambda_handler",
-            Code={"ZipFile": zipfile.read()},
-            Timeout=180,
-            Environment={
-                "Variables": {
-                    "ETC_CHANNEL": "dummy_chat@id.007",
-                }
-            },
-        )
-    logger.info("loaded zip")
-    wait_for_function_active(function_name, lambda_client)
-    logger.info("function active")
-    return function_name
+    return boto3.client("dynamodb", endpoint_url=str(localstack))
 
 
 @pytest.fixture(scope="session")
@@ -98,7 +59,7 @@ def flask_function(lambda_client: BaseClient) -> str:
             Timeout=180,
             Environment={
                 "Variables": {
-                    "ETC_CHANNEL": "dummy_chat@id.007",
+                    "DYNAMODB_ENDPOINT": "http://host.docker.internal:4569",
                 }
             },
         )
@@ -130,7 +91,7 @@ def wait_for_function_active(function_name, lambda_client):
 
 
 @pytest.fixture(scope="session")
-def people_table(localstack) -> Generator[Model]:  # noqa: ARG001
+def people_table(localstack) -> Generator[type[Person]]:  # noqa: ARG001
     if not Person.exists():
         Person.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
     yield Person

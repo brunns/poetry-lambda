@@ -4,14 +4,13 @@ import pytest
 from brunns.matchers.werkzeug import is_werkzeug_response
 from flask.testing import FlaskClient
 from hamcrest import assert_that, contains_string
-from pynamodb.models import Model
 
 from poetry_lambda.model.person import Person
 from tests.utils.builders import PersonFactory
 
 
 @pytest.fixture(autouse=True, scope="module")
-def persisted_person(people_table: Model) -> Generator[Person]:  # noqa: ARG001
+def persisted_person(people_table: type[Person]) -> Generator[Person]:  # noqa: ARG001
     person = PersonFactory()
     person.save()
     yield person
