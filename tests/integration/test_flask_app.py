@@ -2,7 +2,7 @@ from collections.abc import Generator
 from typing import Any
 
 import pytest
-from brunns.matchers.werkzeug import is_werkzeug_response
+from brunns.matchers.werkzeug import is_werkzeug_response as is_response
 from flask.testing import FlaskClient
 from hamcrest import assert_that, contains_string
 
@@ -25,7 +25,7 @@ def test_no_name_given(client: FlaskClient):
     response = client.get("/")
 
     # Then
-    assert_that(response, is_werkzeug_response().with_status_code(200).and_text(contains_string("Hello World")))
+    assert_that(response, is_response().with_status_code(200).and_text(contains_string("Hello World")))
 
 
 def test_app_for_name_with_nickname(client: FlaskClient):
@@ -35,4 +35,14 @@ def test_app_for_name_with_nickname(client: FlaskClient):
     response = client.get("/simon")
 
     # Then
-    assert_that(response, is_werkzeug_response().with_status_code(200).and_text(contains_string("Hello Baldy")))
+    assert_that(response, is_response().with_status_code(200).and_text(contains_string("Hello Baldy")))
+
+
+def test_app_for_nonexistent_name(client: FlaskClient):
+    # Given
+
+    # When
+    response = client.get("/fred")
+
+    # Then
+    assert_that(response, is_response().with_status_code(404))
