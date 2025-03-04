@@ -16,7 +16,6 @@ dependencies = [
     "httpx (>=0.28.1,<0.29.0)",
     "mangum (>=0.19.0,<0.20.0)",
     "pydantic (>=2.10.6,<3.0.0)",
-    "pynamodb (>=6.0.2,<7.0.0)",
     "wireup (>=0.16.0,<0.17.0)",
     "yarl (>=1.18.3,<2.0.0)",
 ]
@@ -60,6 +59,7 @@ select = ["ALL"]
 ignore = ["COM812", "D", "PGH003"]
 
 [tool.ruff.lint.per-file-ignores]
+"src/poetry_lambda/repos/*" = ["ANN401"]
 "tests/*" = ["ANN", "INP", "S101", "S106"]
 
 [tool.pyright]

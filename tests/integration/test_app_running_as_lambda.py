@@ -2,6 +2,7 @@ import json
 import logging
 from collections.abc import Generator
 from http import HTTPStatus
+from typing import Any
 
 import httpx
 import pytest
@@ -17,11 +18,12 @@ logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(autouse=True, scope="module")
-def persisted_person(people_table: type[Person]) -> Generator[Person]:  # noqa: ARG001
+def persisted_person(people_table: Any) -> Generator[Person]:
     person = PersonFactory(name="fred", nickname="Freddy")
-    person.save()
+
+    people_table.put_item(Item=person.model_dump())
     yield person
-    person.delete()
+    people_table.delete_item(Key={"name": person.name})
 
 
 def test_install_and_call_lambda_flask(lambda_client: BaseClient, flask_function: str):
@@ -61,7 +63,6 @@ def test_install_and_call_flask_lambda_over_http(flask_function_url: URL):
     assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_body(contains_string("Hello")))
 
 
-@pytest.mark.xfail
 def test_install_and_call_flask_lambda_with_nickname_over_http(flask_function_url: URL):
     # Given
 

@@ -1575,24 +1575,6 @@ tests = ["coverage[toml]", "dataclasses ; python_version < \"3.7\"", "mypy (!=0.
 tests-numpy = ["numpy", "pyhamcrest[tests]"]
 
 [[package]]
-name = "pynamodb"
-version = "6.0.2"
-description = "A Pythonic Interface to DynamoDB"
-optional = false
-python-versions = ">=3.7"
-groups = ["main"]
-files = [
-    {file = "pynamodb-6.0.2-py3-none-any.whl", hash = "sha256:12befe0ed8132b6d77b9212c0af9c894977443ef826b60fe5ef185c2f2f4126b"},
-    {file = "pynamodb-6.0.2.tar.gz", hash = "sha256:a85ea1ee42d6cb53128ec910507406e7901532f605d28e2680016e25bcbd6828"},
-]
-
-[package.dependencies]
-botocore = ">=1.12.54"
-
-[package.extras]
-signals = ["blinker (>=1.3,<2.0)"]
-
-[[package]]
 name = "pyotp"
 version = "2.9.0"
 description = "Python One Time Password Library"
@@ -2337,4 +2319,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<4.0"
-content-hash = "6ecf29569648f3bb19b20bcabf9111fd58b250fa3404a452b7229e2e2ee8c81f"
+content-hash = "c0ab5b293a5ae714044bcf25d16eca9446cd8a114366bd3493eaf83139c5a33a"

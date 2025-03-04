@@ -1,16 +1,16 @@
 import logging
 from collections.abc import Generator
 from pathlib import Path
+from typing import Any
 
 import boto3
 import httpx
 import pytest
 import stamina
+from boto3.resources.base import ServiceResource
 from botocore.client import BaseClient
 from httpx import RequestError
 from yarl import URL
-
-from poetry_lambda.model.person import Person
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +43,11 @@ def lambda_client(localstack: URL) -> BaseClient:
 @pytest.fixture(scope="session")
 def dynamodb_client(localstack: URL) -> BaseClient:
     return boto3.client("dynamodb", endpoint_url=str(localstack))
+
+
+@pytest.fixture(scope="session")
+def dynamodb_resource(localstack: URL) -> ServiceResource:
+    return boto3.resource("dynamodb", endpoint_url=str(localstack))
 
 
 @pytest.fixture(scope="session")
@@ -91,8 +96,14 @@ def wait_for_function_active(function_name, lambda_client):
 
 
 @pytest.fixture(scope="session")
-def people_table(localstack) -> Generator[type[Person]]:  # noqa: ARG001
-    if not Person.exists():
-        Person.create_table(read_capacity_units=1, write_capacity_units=1, wait=True)
-    yield Person
-    Person.delete_table()
+def people_table(dynamodb_resource: ServiceResource) -> Generator[Any]:
+    table = dynamodb_resource.create_table(
+        TableName="People",
+        KeySchema=[{"AttributeName": "name", "KeyType": "HASH"}],
+        AttributeDefinitions=[{"AttributeName": "name", "AttributeType": "S"}],
+        ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5},
+    )
+    table.wait_until_exists()
+    yield table
+    table.delete()
+    table.wait_until_not_exists()

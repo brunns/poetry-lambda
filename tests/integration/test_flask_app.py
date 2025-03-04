@@ -1,4 +1,5 @@
 from collections.abc import Generator
+from typing import Any
 
 import pytest
 from brunns.matchers.werkzeug import is_werkzeug_response
@@ -10,11 +11,11 @@ from tests.utils.builders import PersonFactory
 
 
 @pytest.fixture(autouse=True, scope="module")
-def persisted_person(people_table: type[Person]) -> Generator[Person]:  # noqa: ARG001
+def persisted_person(people_table: Any) -> Generator[Person]:
     person = PersonFactory()
-    person.save()
+    people_table.put_item(Item=person.model_dump())
     yield person
-    person.delete()
+    people_table.delete_item(Key={"name": person.name})
 
 
 def test_no_name_given(client: FlaskClient):

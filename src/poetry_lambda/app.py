@@ -1,4 +1,5 @@
 import logging
+import os
 from http import HTTPStatus
 from typing import Any
 
@@ -9,6 +10,7 @@ from flask.typing import ResponseReturnValue
 from mangum import Mangum
 from mangum.types import LambdaContext, LambdaEvent
 from pydantic import BaseModel
+from yarl import URL
 
 from poetry_lambda import repos, services
 from poetry_lambda.services import PersonService
@@ -33,7 +35,10 @@ def create_app() -> Flask:
         hello = Hello(status=HTTPStatus.OK, message=f"Hello {person_service.get_nickname(name)}!")
         return hello.model_dump_json()
 
-    container = wireup.create_container(service_modules=[services, repos])
+    container = wireup.create_container(
+        service_modules=[services, repos],
+        parameters={"dynamodb_endpoint": URL(os.getenv("DYNAMODB_ENDPOINT", "http://localhost:4566"))},
+    )
     wireup.integration.flask.setup(container, app, import_flask_config=True)
     app.logger.info("app ready")
     return app
