@@ -2,7 +2,7 @@
 
 Sandbox to try building an [AWS Lambda](https://aws.amazon.com/lambda/) with [Flask](https://pypi.org/project/flask/), and ~~pynamodb~~ [boto3](https://pypi.org/project/boto3/) to access [Dynamo](https://aws.amazon.com/dynamodb/). 
 
-We'll be separating our [presentation](https://martinfowler.com/eaaDev/SeparatedPresentation.html) layer, [business services](https://martinfowler.com/eaaCatalog/serviceLayer.html) layer and [repository](https://martinfowler.com/eaaCatalog/repository.html) layer, and using [wireup](https://pypi.org/project/wireup/) for [dependency injection](https://pinboard.in/u:brunns/t:dependency-injection). We'll be using [Pydantic](https://pypi.org/project/pydantic/) for both response models and database models.
+We'll be separating our [presentation](https://martinfowler.com/eaaDev/SeparatedPresentation.html) layer (where API logic lives), [business services](https://martinfowler.com/eaaCatalog/serviceLayer.html) layer (where business logic lives) and [repository](https://martinfowler.com/eaaCatalog/repository.html) layer (where database logic lives). We will be using [wireup](https://pypi.org/project/wireup/) for [dependency injection](https://pinboard.in/u:brunns/t:dependency-injection), so services get their dependencies given to them ("injection"), and wireup takes care of that. We'll be using [Pydantic](https://pypi.org/project/pydantic/) for both response models and database models.
 
 Local tests will use [localstack](https://www.localstack.cloud/), started & stopped using [pytest-docker](https://pypi.org/project/pytest-docker/).
 
