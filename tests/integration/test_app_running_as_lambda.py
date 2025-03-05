@@ -66,7 +66,7 @@ def test_install_and_call_flask_lambda_over_http(flask_function_url: URL):
 
 
 def test_install_and_call_flask_lambda_with_nickname_over_http(flask_function_url: URL):
-    """Given lambda installed into localstack, run it via http, with a path"""
+    """Given lambda installed into localstack, run it via http, with a name specified so we go to DynamoDB"""
     # Given
 
     # When
