@@ -166,6 +166,10 @@ All tests
 
 Requires: unit, integration
 
+```sh
+poetry run coverage report
+```
+
 ### unit
 
 Unit tests
@@ -173,7 +177,7 @@ Unit tests
 Requires: install
 
 ```sh
-poetry run pytest tests/unit/ --durations=10 --cov-report term-missing --cov src
+poetry run pytest tests/unit/ --durations=10 --cov-report= --cov src/poetry_lambda
 ```
 
 ### integration
@@ -183,7 +187,7 @@ Integration tests
 Requires: docker, install, build
 
 ```sh
-poetry run pytest tests/integration/ --durations=10 --cov-report term-missing --cov src
+poetry run pytest tests/integration/ --durations=10 --cov-append --cov-report= --cov src/poetry_lambda
 ```
 
 ### format
