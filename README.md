@@ -6,13 +6,13 @@ We'll be separating our [presentation](https://martinfowler.com/eaaDev/Separated
 
 Local tests will use [localstack](https://www.localstack.cloud/), started & stopped using [pytest-docker](https://pypi.org/project/pytest-docker/).
 
-Requires [poetry](https://python-poetry.org) and [colima](https://github.com/abiosoft/colima). Optionally makes use of [direnv](https://direnv.net/) to set your environment and [xc](https://xcfile.dev/) as a task runner.
+Requires [Python](https://www.python.org/) version 3.13 (I use [pyenv](https://github.com/pyenv/pyenv) for Python versions) and [poetry](https://python-poetry.org) version 2. Optionally makes use of [direnv](https://direnv.net/) to set your environment and [xc](https://xcfile.dev/) as a task runner.
 
 ## Setup
 
 ### Mac
 
-On a Mac I needed these steps
+On a Mac, [colima](https://github.com/abiosoft/colima) is required. I needed these steps:
 
 ```sh 
 poetry self add poetry-plugin-lambda-build poetry-plugin-export
@@ -68,7 +68,7 @@ poetry install
 
 Build lambda package in dist/
 
-Requires: colima, install
+Requires: docker, install
 
 ```
 poetry build-lambda -vv
@@ -105,7 +105,7 @@ poetry run pytest tests/unit/ --durations=10 --cov-report term-missing --cov src
 
 Integration tests
 
-Requires: colima, install, build
+Requires: docker, install, build
 
 ```sh
 poetry run pytest tests/integration/ --durations=10 --cov-report term-missing --cov src
@@ -130,14 +130,21 @@ poetry run ruff check .
 poetry run pyright
 ```
 
-### colima
+### docker
 
-Ensure colima is running
+Ensure docker is running
 
 Run: once
 
-```shell
-colima status || colima start
+```sh
+unamestr=$(uname)
+if [[ "$unamestr" == 'Linux' ]]; then
+  docker status || docker start
+elif [[ "$unamestr" == 'Darwin' ]]; then
+  colima status || colima start
+else
+  echo "Unknown Platform"
+fi
 ```
 
 ## Initial setup
