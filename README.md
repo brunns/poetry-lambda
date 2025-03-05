@@ -23,7 +23,75 @@ xc pc
 
 ### Linux
 
-TODO
+Ubuntu Linux / WSL
+
+These are the steps that have worked for me
+(not sure if they are the best practice, but here we are).
+
+Install Python 3.13
+
+```sh
+apt update
+add-apt-repository ppa:deadsnakes/ppa
+apt install python3.13 python3.13-venv python3.13-dev
+```
+
+Install Poetry
+
+```sh
+  curl -sSL https://install.python-poetry.org | python3 -
+  poetry --version
+```
+  Note; install via the package manager did NOT work for me due to version problems (apt install python3-poetry)
+
+Install xc
+
+```sh
+ curl -fsSL "https://github.com/joerdav/xc/releases/download/v0.8.0/xc_0.8.0_linux_amd64" -o /usr/local/bin/xc
+ chmod +x /usr/local/bin/xc
+```
+
+Install docker compose (different from docker-compose)
+
+```
+  DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+  mkdir -p $DOCKER_CONFIG/cli-plugins
+  curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+  chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+  docker compose --version
+```
+
+At this point, should be ready to start with the git repo specific setup.
+First, set your poetry
+
+```sh
+poetry env use python3.13
+source $(poetry env info --path)/bin/activate
+```
+
+```sh
+poetry self add poetry-plugin-lambda-build poetry-plugin-export
+xc pc
+```
+
+If you get there with minimal scars, well done.
+You can try the following
+
+Run the web app
+
+`> poetry run web-app`
+Navigate to url in your browser http://127.0.0.1:5000
+and you should see `{"message": "Hello World!","status": 200}`
+yay!
+
+Test the unit and integration tests
+
+`xc unit` and `xc integration` 
+(currently integration test failing on Linux, 
+might need to add some setup or additional info to the above to get working)
+
+
+
 
 ### Windows
 
