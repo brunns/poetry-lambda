@@ -79,10 +79,13 @@ You can try the following
 
 #### Run the web app
 
-`> poetry run web-app`
+`xc web`
 Navigate to url in your browser http://127.0.0.1:5000
 and you should see `{"message": "Hello World!","status": 200}`
-yay!
+
+Also navigate to http://127.0.0.1:5000/simon 
+to check the dynamoDB connection. You should see `{"message": "Hello Baldy!","status": 200}`
+
 
 #### Test the unit and integration tests
 
