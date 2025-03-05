@@ -2,7 +2,6 @@ import logging
 import os
 import traceback
 from http import HTTPStatus
-from logging.config import dictConfig
 from typing import Any
 
 import wireup.integration.flask
@@ -11,35 +10,13 @@ from flask import Flask, make_response
 from flask.typing import ResponseReturnValue
 from mangum import Mangum
 from mangum.types import LambdaContext, LambdaEvent
-from pydantic import BaseModel
 from yarl import URL
 
 from poetry_lambda import repos, services
+from poetry_lambda.log_config import LOG_LEVEL, init_logging
+from poetry_lambda.response_models import HelloResponse, Problem
 from poetry_lambda.services import PersonService
 from poetry_lambda.services.person_services import UnknownPersonError
-
-LOG_LEVEL = logging.DEBUG
-
-
-class HelloResponse(BaseModel):
-    status: int
-    message: str
-
-
-class Error(BaseModel):
-    name: str
-    reason: str
-
-
-class Problem(BaseModel):
-    """RFC 9457 problem detail - see https://pinboard.in/u:brunns/t:rfc-9457/"""
-
-    type: str | None = None
-    title: str | None = None
-    status: int | None = None
-    detail: str | None = None
-    instance: str | None = None
-    errors: list[Error] | None = None
 
 
 def create_app() -> Flask:
@@ -76,25 +53,6 @@ def create_app() -> Flask:
     wireup.integration.flask.setup(container, app, import_flask_config=True)
     app.logger.info("app ready")
     return app
-
-
-def init_logging() -> None:
-    level = logging.getLevelName(LOG_LEVEL)
-    log_format = "%(asctime)s %(levelname)-8s %(name)s %(module)s.py:%(funcName)s():%(lineno)d %(message)s"
-    dictConfig(
-        {
-            "version": 1,
-            "formatters": {
-                "default": {
-                    "format": log_format,
-                }
-            },
-            "handlers": {
-                "wsgi": {"class": "logging.StreamHandler", "stream": "ext://sys.stdout", "formatter": "default"}
-            },
-            "root": {"level": level, "handlers": ["wsgi"]},
-        }
-    )
 
 
 def lambda_handler(event: LambdaEvent, context: LambdaContext) -> dict[str, Any]:

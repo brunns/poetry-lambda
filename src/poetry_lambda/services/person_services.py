@@ -17,7 +17,9 @@ class PersonService:
     def get_nickname(self, name: str | None = None) -> str:
         if name:
             try:
-                return self.person_repo.get_nickname(name)
+                person = self.person_repo.get_person(name)
             except NotFoundError as e:
                 raise UnknownPersonError from e
+            else:
+                return person.nickname
         return "World"

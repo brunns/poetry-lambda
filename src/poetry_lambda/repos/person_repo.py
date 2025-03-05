@@ -27,21 +27,18 @@ class PersonRepo:
         logger.info("given %r", people_table)
         self.people_table = people_table
 
-    def get_nickname(self, name: str) -> str:
+    def get_person(self, name: str) -> Person:
         try:
             response = self.people_table.get_item(Key={"name": name})
         except ClientError:
             logger.error("ClientError for Person with name=%r", name)  # noqa: TRY400
             raise
-
         if "Item" not in response:
             logger.warning("Person not found with name=%r", name)
             raise NotFoundError
-
         try:
             person = Person.model_validate(response.get("Item"))
         except ValidationError:
             logger.error("Invalid record for Person with name=%r, %s", name, response)  # noqa: TRY400
             raise
-
-        return person.nickname
+        return person

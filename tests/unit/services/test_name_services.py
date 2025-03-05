@@ -2,6 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from poetry_lambda.model.person import Person
 from poetry_lambda.repos.exceptions import NotFoundError
 from poetry_lambda.repos.person_repo import PersonRepo
 from poetry_lambda.services import PersonService
@@ -23,7 +24,7 @@ def test_person_service_returns_default():
 def test_person_service_returns_from_repo():
     # Given
     person_repo = MagicMock(spec=PersonRepo)
-    person_repo.get_nickname = MagicMock(return_value="Baldy Head")
+    person_repo.get_person = MagicMock(return_value=Person(name="simon", nickname="Baldy Head"))
     ps = PersonService(person_repo)
 
     # When
@@ -36,7 +37,7 @@ def test_person_service_returns_from_repo():
 def test_person_service_for_nonexistent_name():
     # Given
     person_repo = MagicMock(spec=PersonRepo)
-    person_repo.get_nickname = MagicMock(side_effect=NotFoundError)
+    person_repo.get_person = MagicMock(side_effect=NotFoundError)
     ps = PersonService(person_repo)
 
     # When
