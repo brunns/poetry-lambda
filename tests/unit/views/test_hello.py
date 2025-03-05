@@ -29,6 +29,14 @@ class FakeUnknownPersonService(PersonService):
         raise UnknownPersonError
 
 
+class FakeUnexpectedErrorPersonService(PersonService):
+    def __init__(self):
+        pass
+
+    def get_nickname(self, _: str | None = None) -> str:
+        raise ValueError
+
+
 def test_name_given(app: Flask, client: FlaskClient):
     with get_container(app).override.service(PersonService, new=FakePersonService()):
         response = client.get("/simon")
@@ -45,3 +53,9 @@ def test_unknown_name(app: Flask, client: FlaskClient):
     with get_container(app).override.service(PersonService, new=FakeUnknownPersonService()):
         response = client.get("/fred")
         assert_that(response, is_response().with_status_code(HTTPStatus.NOT_FOUND))
+
+
+def test_unexpected_error(app: Flask, client: FlaskClient):
+    with get_container(app).override.service(PersonService, new=FakeUnexpectedErrorPersonService()):
+        response = client.get("/fred")
+        assert_that(response, is_response().with_status_code(HTTPStatus.INTERNAL_SERVER_ERROR))

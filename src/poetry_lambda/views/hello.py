@@ -17,7 +17,8 @@ logger = logging.getLogger(__name__)
 @hello.get("/<name>")
 def hello_world(person_service: PersonService, name: str | None = None) -> ResponseReturnValue:
     try:
-        hello_response = HelloResponse(status=HTTPStatus.OK, message=f"Hello {person_service.get_nickname(name)}!")
+        nickname = person_service.get_nickname(name)
+        hello_response = HelloResponse(status=HTTPStatus.OK, message=f"Hello {nickname}!")
         return hello_response.model_dump()
     except UnknownPersonError:
         problem = Problem(title="Name not found", status=HTTPStatus.NOT_FOUND, detail=f"Name {name} not found.")
