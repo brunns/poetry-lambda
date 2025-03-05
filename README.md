@@ -4,7 +4,7 @@ Sandbox to try building an [AWS Lambda](https://aws.amazon.com/lambda/) with [Fl
 
 We'll be separating our [presentation](https://martinfowler.com/eaaDev/SeparatedPresentation.html) layer (where API logic lives), [business services](https://martinfowler.com/eaaCatalog/serviceLayer.html) layer (where business logic lives) and [repository](https://martinfowler.com/eaaCatalog/repository.html) layer (where database logic lives). We will be using [wireup](https://pypi.org/project/wireup/) for [dependency injection](https://pinboard.in/u:brunns/t:dependency-injection), so services get their dependencies given to them ("injection"), and wireup takes care of that. We'll be using [Pydantic](https://pypi.org/project/pydantic/) for both response models and database models.
 
-Local tests will use [localstack](https://www.localstack.cloud/), started & stopped using [pytest-docker](https://pypi.org/project/pytest-docker/).
+Local tests will use [localstack](https://www.localstack.cloud/), started & stopped using [pytest-docker](https://pypi.org/project/pytest-docker/). We'll make extensive use of [pytest fixtures](https://docs.pytest.org/en/6.2.x/fixture.html), [builders](https://pypi.org/project/factory-boy/) and [matchers](https://pypi.org/project/pyhamcrest/) to keep our tests clean.
 
 Requires [Python](https://www.python.org/) version 3.13 (I use [pyenv](https://github.com/pyenv/pyenv) for Python versions) and [poetry](https://python-poetry.org) version 2. Optionally makes use of [direnv](https://direnv.net/) to set your environment and [xc](https://xcfile.dev/) as a task runner.
 
