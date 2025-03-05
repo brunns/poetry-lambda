@@ -5,9 +5,9 @@ from http import HTTPStatus
 from flask import Blueprint, make_response
 from flask.typing import ResponseReturnValue
 
-from poetry_lambda.response_models import HelloResponse, Problem
 from poetry_lambda.services import PersonService
 from poetry_lambda.services.person_services import UnknownPersonError
+from poetry_lambda.views.response_models import HelloResponse, Problem
 
 hello = Blueprint("hello", __name__, template_folder="templates")
 logger = logging.getLogger(__name__)

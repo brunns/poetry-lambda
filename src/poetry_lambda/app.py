@@ -20,8 +20,10 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.logger.info("app created")
 
+    # Register views
     app.register_blueprint(hello)
 
+    # Set up dependency injection using wireup
     config = {
         "dynamodb_endpoint": URL(os.getenv("DYNAMODB_ENDPOINT", "http://localhost:4566")),
         "aws_region": os.getenv("AWS_REGION", "eu-west-1"),
@@ -34,11 +36,13 @@ def create_app() -> Flask:
 
 
 def lambda_handler(event: LambdaEvent, context: LambdaContext) -> dict[str, Any]:
+    """For running the Flask app as an AWS Lambda."""
     handler = Mangum(WsgiToAsgi(create_app()))
     return handler(event, context)
 
 
 def main() -> None:
+    """For running the Flask app as a local process."""
     app = create_app()
     app.run(debug=LOG_LEVEL == logging.DEBUG)
 
