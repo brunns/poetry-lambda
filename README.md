@@ -2,11 +2,17 @@
 
 Sandbox to try building an [AWS Lambda](https://aws.amazon.com/lambda/) with [Flask](https://pypi.org/project/flask/), [DI](https://pinboard.in/u:brunns/t:dependency-injection) using [wireup](https://pypi.org/project/wireup/), and ~~pynamodb~~ [boto3](https://pypi.org/project/boto3/) to access [Dynamo](https://aws.amazon.com/dynamodb/). 
 
+We'll be separating our [presentation](https://martinfowler.com/eaaDev/SeparatedPresentation.html), [business services](https://martinfowler.com/eaaCatalog/serviceLayer.html) and [repositories](https://martinfowler.com/eaaCatalog/repository.html).
+
 Local tests will use [localstack](https://www.localstack.cloud/), started & stopped using [pytest-docker](https://pypi.org/project/pytest-docker/).
 
 Requires [poetry](https://python-poetry.org) and [colima](https://github.com/abiosoft/colima). Optionally makes use of [direnv](https://direnv.net/) to set your environment and [xc](https://xcfile.dev/) as a task runner.
 
 ## Setup
+
+### Mac
+
+On a Mac I needed these steps
 
 ```sh 
 poetry self add poetry-plugin-lambda-build poetry-plugin-export
@@ -14,6 +20,14 @@ cp .envrc.template .envrc
 direnv allow
 xc pc
 ```
+
+### Linux
+
+TODO
+
+### Windows
+
+TODO
 
 ## Tasks
 
