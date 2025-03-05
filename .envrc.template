@@ -1,1 +1,2 @@
 export DOCKER_HOST="unix://$HOME/.colima/docker.sock"
+export AWS_DEFAULT_REGION=eu-west-1

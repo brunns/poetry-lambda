@@ -39,17 +39,35 @@ def is_responsive(url: URL) -> bool:
 
 @pytest.fixture(scope="session")
 def lambda_client(localstack: URL) -> BaseClient:
-    return boto3.client("lambda", endpoint_url=str(localstack), region_name=AWS_REGION)
+    return boto3.client(
+        "lambda",
+        endpoint_url=str(localstack),
+        region_name=AWS_REGION,
+        aws_access_key_id="fake",
+        aws_secret_access_key="fake",
+    )
 
 
 @pytest.fixture(scope="session")
 def dynamodb_client(localstack: URL) -> BaseClient:
-    return boto3.client("dynamodb", endpoint_url=str(localstack), region_name=AWS_REGION)
+    return boto3.client(
+        "dynamodb",
+        endpoint_url=str(localstack),
+        region_name=AWS_REGION,
+        aws_access_key_id="fake",
+        aws_secret_access_key="fake",
+    )
 
 
 @pytest.fixture(scope="session")
 def dynamodb_resource(localstack: URL) -> ServiceResource:
-    return boto3.resource("dynamodb", endpoint_url=str(localstack), region_name=AWS_REGION)
+    return boto3.resource(
+        "dynamodb",
+        endpoint_url=str(localstack),
+        region_name=AWS_REGION,
+        aws_access_key_id="fake",
+        aws_secret_access_key="fake",
+    )
 
 
 @pytest.fixture(scope="session")

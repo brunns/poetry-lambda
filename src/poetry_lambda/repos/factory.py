@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import Annotated
 
 import boto3
@@ -16,7 +17,15 @@ def dynamodb_resource_factory(
     aws_region: Annotated[str, Inject(param="aws_region")],
 ) -> ServiceResource:
     logger.info("creating dynamodb_resource with endpoint %s, region %s", dynamodb_endpoint, aws_region)
-    return boto3.resource("dynamodb", endpoint_url=str(dynamodb_endpoint), region_name=aws_region)
+    resource = boto3.resource(
+        "dynamodb",
+        endpoint_url=str(dynamodb_endpoint),
+        region_name=aws_region,
+        aws_access_key_id=os.getenv("AWS_ACCESS_KEY", "fake"),
+        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY", "fake"),
+    )
+    logger.info("returning %r", resource)
+    return resource
 
 
 @service
@@ -25,4 +34,10 @@ def dynamodb_client_factory(
     aws_region: Annotated[str, Inject(param="aws_region")],
 ) -> BaseClient:
     logger.info("creating dynamodb_client with endpoint %s, region %s", dynamodb_endpoint, aws_region)
-    return boto3.client("dynamodb", endpoint_url=str(dynamodb_endpoint), region_name=aws_region)
+    return boto3.client(
+        "dynamodb",
+        endpoint_url=str(dynamodb_endpoint),
+        region_name=aws_region,
+        aws_access_key_id=os.getenv("AWS_ACCESS_KEY", "fake"),
+        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY", "fake"),
+    )

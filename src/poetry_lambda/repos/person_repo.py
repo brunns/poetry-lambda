@@ -14,9 +14,9 @@ logger = logging.getLogger(__name__)
 
 @service
 def people_table(dynamodb_resource: ServiceResource) -> Any:
-    logger.info("attaching to table People using %s", dynamodb_resource)
+    logger.info("attaching to table People using %r", dynamodb_resource)
     table = dynamodb_resource.Table("People")  # type: ignore[reportAttributeAccessIssue]
-    logger.info("got %s", table)
+    logger.info("returning %r", table)
     return table
 
 
@@ -24,6 +24,7 @@ def people_table(dynamodb_resource: ServiceResource) -> Any:
 class PersonRepo:
     def __init__(self, people_table: Any) -> None:
         super().__init__()
+        logger.info("given %r", people_table)
         self.people_table = people_table
 
     def get_nickname(self, name: str) -> str:
