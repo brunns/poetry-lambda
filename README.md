@@ -28,7 +28,7 @@ Ubuntu Linux / WSL
 These are the steps that have worked for me
 (not sure if they are the best practice, but here we are).
 
-Install Python 3.13
+#### Install Python 3.13
 
 ```sh
 apt update
@@ -36,7 +36,7 @@ add-apt-repository ppa:deadsnakes/ppa
 apt install python3.13 python3.13-venv python3.13-dev
 ```
 
-Install Poetry
+#### Install Poetry
 
 ```sh
   curl -sSL https://install.python-poetry.org | python3 -
@@ -44,14 +44,14 @@ Install Poetry
 ```
   Note; install via the package manager did NOT work for me due to version problems (apt install python3-poetry)
 
-Install xc
+#### Install xc
 
 ```sh
  curl -fsSL "https://github.com/joerdav/xc/releases/download/v0.8.0/xc_0.8.0_linux_amd64" -o /usr/local/bin/xc
  chmod +x /usr/local/bin/xc
 ```
 
-Install docker compose (different from docker-compose)
+#### Install docker compose (different from docker-compose)
 
 ```
   DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
@@ -77,21 +77,25 @@ xc pc
 If you get there with minimal scars, well done.
 You can try the following
 
-Run the web app
+#### Run the web app
 
 `> poetry run web-app`
 Navigate to url in your browser http://127.0.0.1:5000
 and you should see `{"message": "Hello World!","status": 200}`
 yay!
 
-Test the unit and integration tests
+#### Test the unit and integration tests
 
-`xc unit` and `xc integration` 
+`xc test`
+
 (currently integration test failing on Linux, 
 might need to add some setup or additional info to the above to get working)
 
+#### Before committing
 
+Run all tests and linting
 
+`xc pc` 
 
 ### Windows
 
