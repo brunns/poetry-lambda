@@ -1,7 +1,20 @@
 import logging
+import os
 from logging.config import dictConfig
+from typing import Any
+
+from yarl import URL
 
 LOG_LEVEL = logging.DEBUG
+
+
+def config() -> dict[str, Any]:
+    return {
+        "dynamodb_endpoint": URL(os.getenv("DYNAMODB_ENDPOINT", "http://localhost:4566")),
+        "aws_region": os.getenv("AWS_REGION", "eu-west-1"),
+        "aws_access_key_id": os.getenv("AWS_ACCESS_KEY", "dummy_key"),
+        "aws_secret_access_key": os.getenv("AWS_SECRET_ACCESS_KEY", "dummy_secret"),
+    }
 
 
 def init_logging() -> None:
