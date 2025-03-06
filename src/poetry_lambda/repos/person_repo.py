@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 from pydantic import ValidationError
 from wireup import service
 
-from poetry_lambda.model.person import Person
+from poetry_lambda.model.person import Name, Person
 from poetry_lambda.repos.exceptions import NotFoundError
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ class PersonRepo:
         logger.info("given %r", people_table)
         self.people_table = people_table
 
-    def get_person(self, name: str) -> Person:
+    def get_person(self, name: Name) -> Person:
         try:
             response = self.people_table.get_item(Key={"name": name})
         except ClientError:

@@ -1,6 +1,11 @@
+from typing import NewType
+
 from pydantic import BaseModel
+
+Name = NewType("Name", str)
+Nickname = NewType("Nickname", str)
 
 
 class Person(BaseModel):
-    name: str
-    nickname: str
+    name: Name
+    nickname: Nickname
