@@ -9,6 +9,7 @@ from mangum.types import LambdaContext, LambdaEvent
 
 from poetry_lambda import repos, services
 from poetry_lambda.config import LOG_LEVEL, config, init_logging
+from poetry_lambda.error_handler import handle_exception
 from poetry_lambda.views.hello import hello
 
 
@@ -30,8 +31,9 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.logger.info("app created")
 
-    # Register views
+    # Register views & error handler
     app.register_blueprint(hello)
+    app.register_error_handler(Exception, handle_exception)
 
     # Set up dependency injection using wireup
     container = wireup.create_container(service_modules=[services, repos], parameters=config())
