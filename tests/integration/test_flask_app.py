@@ -3,9 +3,10 @@ from http import HTTPStatus
 from typing import Any
 
 import pytest
+from brunns.matchers.data import json_matching as is_json_that
 from brunns.matchers.werkzeug import is_werkzeug_response as is_response
 from flask.testing import FlaskClient
-from hamcrest import assert_that, contains_string
+from hamcrest import assert_that, has_entries
 
 from poetry_lambda.model.person import Person
 from tests.utils.builders import PersonFactory
@@ -27,7 +28,12 @@ def test_no_name_given(client: FlaskClient):
     response = client.get("/")
 
     # Then
-    assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_text(contains_string("Hello World")))
+    assert_that(
+        response,
+        is_response()
+        .with_status_code(HTTPStatus.OK)
+        .and_text(is_json_that(has_entries(message="Hello World!", status=HTTPStatus.OK))),
+    )
 
 
 def test_app_for_name_with_nickname(client: FlaskClient):
@@ -37,7 +43,12 @@ def test_app_for_name_with_nickname(client: FlaskClient):
     response = client.get("/simon")
 
     # Then
-    assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_text(contains_string("Hello Baldy")))
+    assert_that(
+        response,
+        is_response()
+        .with_status_code(HTTPStatus.OK)
+        .and_text(is_json_that(has_entries(message="Hello Baldy!", status=HTTPStatus.OK))),
+    )
 
 
 def test_app_for_nonexistent_name(client: FlaskClient):
@@ -47,4 +58,9 @@ def test_app_for_nonexistent_name(client: FlaskClient):
     response = client.get("/fred")
 
     # Then
-    assert_that(response, is_response().with_status_code(HTTPStatus.NOT_FOUND))
+    assert_that(
+        response,
+        is_response()
+        .with_status_code(HTTPStatus.NOT_FOUND)
+        .and_text(is_json_that(has_entries(detail="Name fred not found.", status=HTTPStatus.NOT_FOUND))),
+    )

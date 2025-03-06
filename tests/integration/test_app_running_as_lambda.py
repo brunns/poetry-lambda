@@ -7,6 +7,7 @@ from typing import Any
 import httpx
 import pytest
 from botocore.client import BaseClient
+from brunns.matchers.data import json_matching as is_json_that
 from brunns.matchers.response import is_response
 from hamcrest import assert_that, contains_string, has_entries
 from yarl import URL
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 @pytest.fixture(autouse=True, scope="module")
 def persisted_person(people_table: Any) -> Generator[Person]:
-    person = PersonFactory(name="fred", nickname="Freddy")
+    person = PersonFactory(name="ayesh", nickname="Ash")
 
     people_table.put_item(Item=person.model_dump())
     yield person
@@ -62,7 +63,12 @@ def test_install_and_call_flask_lambda_over_http(flask_function_url: URL):
     response = httpx.get(str(flask_function_url))
 
     # Then
-    assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_body(contains_string("Hello")))
+    assert_that(
+        response,
+        is_response()
+        .with_status_code(HTTPStatus.OK)
+        .and_body(is_json_that(has_entries(message="Hello World!", status=HTTPStatus.OK))),
+    )
 
 
 def test_install_and_call_flask_lambda_with_nickname_over_http(flask_function_url: URL):
@@ -70,7 +76,12 @@ def test_install_and_call_flask_lambda_with_nickname_over_http(flask_function_ur
     # Given
 
     # When
-    response = httpx.get(str(flask_function_url / "fred"))
+    response = httpx.get(str(flask_function_url / "ayesh"))
 
     # Then
-    assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_body(contains_string("Freddy")))
+    assert_that(
+        response,
+        is_response()
+        .with_status_code(HTTPStatus.OK)
+        .and_body(is_json_that(has_entries(message="Hello Ash!", status=HTTPStatus.OK))),
+    )
