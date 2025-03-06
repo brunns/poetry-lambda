@@ -3,7 +3,6 @@ from typing import Annotated
 
 import boto3
 from boto3.resources.base import ServiceResource
-from botocore.client import BaseClient
 from wireup import Inject, service
 from yarl import URL
 
@@ -29,20 +28,3 @@ def dynamodb_resource_factory(
     )
     logger.info("returning %r", resource)
     return resource
-
-
-@service
-def dynamodb_client_factory(
-    dynamodb_endpoint: Annotated[URL, Inject(param="dynamodb_endpoint")],
-    aws_region: Annotated[AwsRegion, Inject(param="aws_region")],
-    aws_access_key_id: Annotated[AwsAccessKey, Inject(param="aws_access_key_id")],
-    aws_secret_access_key: Annotated[AwsSecretAccessKey, Inject(param="aws_secret_access_key")],
-) -> BaseClient:
-    logger.info("creating dynamodb_client with endpoint %s, region %s", dynamodb_endpoint, aws_region)
-    return boto3.client(
-        "dynamodb",
-        endpoint_url=str(dynamodb_endpoint),
-        region_name=aws_region,
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-    )

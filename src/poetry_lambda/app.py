@@ -13,13 +13,13 @@ from poetry_lambda.error_handler import handle_exception
 from poetry_lambda.views.hello import hello
 
 
-def main() -> None:
+def main() -> None:  # pragma: no cover
     """Run the Flask app as a local process."""
     app = create_app()
     app.run(debug=LOG_LEVEL == logging.DEBUG)
 
 
-def lambda_handler(event: LambdaEvent, context: LambdaContext) -> dict[str, Any]:
+def lambda_handler(event: LambdaEvent, context: LambdaContext) -> dict[str, Any]:  # pragma: no cover
     """Run the Flask app as an AWS Lambda."""
     handler = Mangum(WsgiToAsgi(create_app()))
     return handler(event, context)
