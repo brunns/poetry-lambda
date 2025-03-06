@@ -12,6 +12,18 @@ from poetry_lambda.config import LOG_LEVEL, config, init_logging
 from poetry_lambda.views.hello import hello
 
 
+def main() -> None:
+    """Run the Flask app as a local process."""
+    app = create_app()
+    app.run(debug=LOG_LEVEL == logging.DEBUG)
+
+
+def lambda_handler(event: LambdaEvent, context: LambdaContext) -> dict[str, Any]:
+    """Run the Flask app as an AWS Lambda."""
+    handler = Mangum(WsgiToAsgi(create_app()))
+    return handler(event, context)
+
+
 def create_app() -> Flask:
     init_logging()
 
@@ -27,18 +39,6 @@ def create_app() -> Flask:
 
     app.logger.info("app ready")
     return app
-
-
-def lambda_handler(event: LambdaEvent, context: LambdaContext) -> dict[str, Any]:
-    """For running the Flask app as an AWS Lambda."""
-    handler = Mangum(WsgiToAsgi(create_app()))
-    return handler(event, context)
-
-
-def main() -> None:
-    """For running the Flask app as a local process."""
-    app = create_app()
-    app.run(debug=LOG_LEVEL == logging.DEBUG)
 
 
 if __name__ == "__main__":
