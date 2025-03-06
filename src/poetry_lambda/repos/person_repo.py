@@ -2,8 +2,6 @@ import logging
 from typing import Any
 
 from boto3.resources.base import ServiceResource
-from botocore.exceptions import ClientError
-from pydantic import ValidationError
 from wireup import service
 
 from poetry_lambda.model.person import Name, Person
@@ -13,10 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 @service
-def people_table(dynamodb_resource: ServiceResource) -> Any:
-    logger.info("attaching to table People using %r", dynamodb_resource)
+def people_table_factory(dynamodb_resource: ServiceResource) -> Any:
     table = dynamodb_resource.Table("People")  # type: ignore[reportAttributeAccessIssue]
-    logger.info("returning %r", table)
+    logger.info("built people_table: %r", table)
     return table
 
 
@@ -24,21 +21,13 @@ def people_table(dynamodb_resource: ServiceResource) -> Any:
 class PersonRepo:
     def __init__(self, people_table: Any) -> None:
         super().__init__()
-        logger.info("given %r", people_table)
         self.people_table = people_table
 
     def get_person(self, name: Name) -> Person:
-        try:
-            response = self.people_table.get_item(Key={"name": name})
-        except ClientError:
-            logger.error("ClientError for Person with name=%r", name)  # noqa: TRY400
-            raise
-        if "Item" not in response:
-            logger.warning("Person not found with name=%r", name)
-            raise NotFoundError
-        try:
-            person = Person.model_validate(response.get("Item"))
-        except ValidationError:
-            logger.error("Invalid record for Person with name=%r, %s", name, response)  # noqa: TRY400
-            raise
-        return person
+        dynamo_response = self.people_table.get_item(Key={"name": name})
+
+        if "Item" not in dynamo_response:
+            message = f"Person not found with name {name}"
+            raise NotFoundError(message)
+
+        return Person.model_validate(dynamo_response.get("Item"))

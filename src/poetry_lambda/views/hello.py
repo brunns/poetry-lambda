@@ -9,8 +9,9 @@ from poetry_lambda.services import PersonService
 from poetry_lambda.services.person_services import UnknownPersonError
 from poetry_lambda.views.response_models import HelloResponse, Problem
 
-hello = Blueprint("hello", __name__)
 logger = logging.getLogger(__name__)
+
+hello = Blueprint("hello", __name__)
 
 
 @hello.get("/")

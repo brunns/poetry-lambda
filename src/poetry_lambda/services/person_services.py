@@ -1,8 +1,12 @@
+import logging
+
 from wireup import service
 
 from poetry_lambda.model.person import Name, Nickname
 from poetry_lambda.repos.exceptions import NotFoundError
 from poetry_lambda.repos.person_repo import PersonRepo
+
+logger = logging.getLogger(__name__)
 
 
 class UnknownPersonError(Exception):
