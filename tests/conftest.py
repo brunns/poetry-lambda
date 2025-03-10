@@ -11,5 +11,5 @@ def app() -> Flask:
 
 
 @pytest.fixture(scope="session")
-def client(app) -> FlaskClient:
+def client(app: Flask) -> FlaskClient:
     return app.test_client()
