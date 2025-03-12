@@ -11,7 +11,7 @@ from poetry_lambda.views.response_models import HelloResponse, Problem
 
 logger = logging.getLogger(__name__)
 
-hello = Blueprint("hello", __name__, url_prefix="/hello")
+hello = Blueprint("hello", __name__)
 
 
 @hello.get("/")
