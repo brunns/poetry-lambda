@@ -220,7 +220,7 @@ Run: once
 ```sh
 unamestr=$(uname)
 if [[ "$unamestr" == 'Linux' ]]; then
-  docker status || docker start
+  docker ps || docker start
 elif [[ "$unamestr" == 'Darwin' ]]; then
   colima status || colima start
 else

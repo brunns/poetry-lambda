@@ -1,7 +1,12 @@
 name: Continuous Integration
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
@@ -23,16 +28,16 @@ jobs:
           poetry install
           poetry self add poetry-plugin-lambda-build poetry-plugin-export
 
-      - name: Unit tests
+      - name: Install xc
         uses: joerdav/setup-xc@v0.0.3
-        id: unit
+
+      - name: Run tests
+        run: xc unit
 
       - name: Run linting
-        uses: joerdav/setup-xc@v0.0.3
-        id: lint
+        run: xc lint
 
       - name: Integration tests
-        uses: joerdav/setup-xc@v0.0.3
         env:
           LOCALSTACK_INTERNAL_DYNAMODB_ENDPOINT: http://localstack:4566/
-        id: integration
+        run: xc integration
