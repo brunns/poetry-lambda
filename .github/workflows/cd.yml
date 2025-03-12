@@ -33,4 +33,6 @@ jobs:
 
       - name: Integration tests
         uses: joerdav/setup-xc@v0.0.3
+        env:
+          LOCALSTACK_INTERNAL_DYNAMODB_ENDPOINT: http://localstack:4566/
         id: integration
