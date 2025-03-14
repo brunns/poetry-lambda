@@ -36,8 +36,8 @@ pytest = "^8.3.4"
 pytest-asyncio = "^0.25.3"
 pytest-cov = "^6.0.0"
 pytest-docker = "^3.2.0"
-ruff = "^0.9.7"
-stamina = "^24.3.0"
+ruff = "^0.11.0"
+stamina = "^25.1.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
