@@ -5,8 +5,7 @@ from flask import Blueprint, make_response
 from flask.typing import ResponseReturnValue
 
 from poetry_lambda.model.person import Name
-from poetry_lambda.services import PersonService
-from poetry_lambda.services.person_services import UnknownPersonError
+from poetry_lambda.services import PersonService, UnknownPersonError
 from poetry_lambda.views.response_models import HelloResponse, Problem
 
 logger = logging.getLogger(__name__)

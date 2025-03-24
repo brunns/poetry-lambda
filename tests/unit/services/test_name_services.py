@@ -3,10 +3,8 @@ from unittest.mock import MagicMock
 import pytest
 
 from poetry_lambda.model.person import Person
-from poetry_lambda.repos.exceptions import NotFoundError
-from poetry_lambda.repos.person_repo import PersonRepo
-from poetry_lambda.services import PersonService
-from poetry_lambda.services.person_services import UnknownPersonError
+from poetry_lambda.repos import NotFoundError, PersonRepo
+from poetry_lambda.services import PersonService, UnknownPersonError
 
 
 def test_person_service_returns_default():

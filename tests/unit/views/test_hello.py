@@ -7,8 +7,7 @@ from flask.testing import FlaskClient
 from hamcrest import assert_that, contains_string
 from wireup.integration.flask import get_container
 
-from poetry_lambda.services import PersonService
-from poetry_lambda.services.person_services import UnknownPersonError
+from poetry_lambda.services import PersonService, UnknownPersonError
 
 logger = logging.getLogger(__name__)
 

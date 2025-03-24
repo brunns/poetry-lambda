@@ -39,5 +39,5 @@ jobs:
 
       - name: Integration tests
         env:
-          LOCALSTACK_INTERNAL_DYNAMODB_ENDPOINT: http://localstack:4566/
+          LOCALSTACK_INTERNAL_ENDPOINT: http://localstack:4566/
         run: xc integration
