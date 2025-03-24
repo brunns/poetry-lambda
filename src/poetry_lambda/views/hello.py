@@ -3,6 +3,7 @@ from http import HTTPStatus
 
 from flask import Blueprint, make_response
 from flask.typing import ResponseReturnValue
+from wireup import Injected
 
 from poetry_lambda.model.person import Name
 from poetry_lambda.services import PersonService, UnknownPersonError
@@ -15,7 +16,7 @@ hello = Blueprint("hello", __name__)
 
 @hello.get("/")
 @hello.get("/<name>")
-def hello_world(person_service: PersonService, name: Name | None = None) -> ResponseReturnValue:
+def hello_world(person_service: Injected[PersonService], name: Name | None = None) -> ResponseReturnValue:
     try:
         nickname = person_service.get_nickname(name)
         hello_response = HelloResponse(status=HTTPStatus.OK, message=f"Hello {nickname}!")

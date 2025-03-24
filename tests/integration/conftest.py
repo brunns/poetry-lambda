@@ -2,7 +2,7 @@ import logging
 import os
 from collections.abc import Generator
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import boto3
 import httpx
@@ -11,8 +11,10 @@ import stamina
 from boto3.resources.base import ServiceResource
 from botocore.client import BaseClient
 from httpx import RequestError
-from pytest_docker.plugin import Services
 from yarl import URL
+
+if TYPE_CHECKING:
+    from pytest_docker.plugin import Services
 
 logger = logging.getLogger(__name__)
 
