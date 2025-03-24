@@ -11,6 +11,7 @@ import stamina
 from boto3.resources.base import ServiceResource
 from botocore.client import BaseClient
 from httpx import RequestError
+from pytest_docker.plugin import Services
 from yarl import URL
 
 logger = logging.getLogger(__name__)
@@ -19,7 +20,14 @@ AWS_REGION = "eu-west-1"
 
 
 @pytest.fixture(scope="session")
-def localstack(docker_ip, docker_services) -> URL:
+def localstack(request: pytest.FixtureRequest) -> URL:
+    if url := os.getenv("RUNNING_LOCALSTACK_URL", None):
+        logger.info("localstack already running on %s", url)
+        return URL(url)
+
+    docker_ip: str = request.getfixturevalue("docker_ip")
+    docker_services: Services = request.getfixturevalue("docker_services")
+
     logger.info("Starting localstack")
     port = docker_services.port_for("localstack", 4566)
     url = URL(f"http://{docker_ip}:{port}")
